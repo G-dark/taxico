@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import cron from "node-cron";
 import fetch from "node-fetch";
+import moment from "moment"
 
 const app = express();
 
@@ -32,9 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
-cron.schedule("0 0 1 * *", async() => {
+cron.schedule("30 12 1 * *", async() => {
   console.log(
-    "Ejecutando tarea diaria a las 12:30 :",
+    "Ejecutando tarea mensual a las 12:00 :",
     new Date().toLocaleString()
   );
   const today = new Date();
@@ -137,6 +138,88 @@ cron.schedule("0 0 1 * *", async() => {
       
   }
 });
+
+cron.schedule("30 12 * * *", async() => {
+  console.log(
+    "Ejecutando tarea diaria a las 12:30 :",
+    new Date().toLocaleString()
+  );
+  const today = new Date();
+  const token = jwt.sign({ id: "ADMIN", username: "ADMIN" }, SECRET_KEY, {
+    expiresIn: "1h",
+  });
+  const cookie = `access_token=${token}; Path=/; HttpOnly;`;
+  let drivers = [],
+    fees = [];
+
+    // drivers
+  try{
+    const res = await fetch(ENDPOINT + "/Driver", {
+      headers: { "Content-Type": "application/json", 'Cookie': cookie },
+    })
+
+    drivers = await res.json()
+    
+  } catch(Error){
+    console.error("Error",Error)
+  }
+
+  // tarifas
+  try{
+    const res2 = await fetch(ENDPOINT + "/Fee", {
+      headers: { "Content-Type": "application/json", 'Cookie': cookie },
+    })
+
+    fees = await res2.json()
+    
+  } catch(Error){
+    console.error("Error",Error)
+  }
+  
+  for (let index = 0; index < drivers.length; index++) {
+    const partes = drivers[index].registered_at.split("T");
+    const today = moment(new Date());
+    const registeredat = moment(partes[0]);
+
+    const paydays = today.diff(registeredat, "days");
+    
+    let payeddays = 0;
+
+    for (let j = 0; j < fees.length; j++) {
+
+      console.log(fees[j].car,fees[j].delivered_by)
+      if (
+        fees[j].car === drivers[index].car &&
+        fees[j].delivered_by === drivers[index].ID
+      ) {
+        payeddays += 1;
+      }
+    }
+
+    const diferencia = payeddays - paydays;
+    console.log("Diferencia",diferencia, paydays,payeddays)
+    const deficit=diferencia*50000
+    
+    const bodyy = {
+      fn:drivers[index].firstname, sn: drivers[index].secondname, 
+      ln:drivers[index].lastname, alias:drivers[index].alias, 
+      ID:drivers[index].ID, car:drivers[index].car, 
+      status:drivers[index]._status, deficit:deficit };
+    try{
+      const res4 = await fetch(ENDPOINT + "/Driver/"+drivers[index].ID, {
+        method: "PATCH",
+        body: JSON.stringify(bodyy),
+        headers: { "Content-Type": "application/json", 'Cookie': cookie },
+      })
+      
+    } catch(Error){
+      console.error("Error",Error)
+    }
+    
+      
+  }
+  
+})
 app.use(fee);
 app.use(repair);
 app.use(taxiDriver);

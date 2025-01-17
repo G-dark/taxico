@@ -61,10 +61,10 @@ export const registerDriver = (req, res) => {
 };
 
 export const updateDriver = (req, res) => {
-  const { fn, sn, ln, alias, ID, car, status }= req.body;
+  const { fn, sn, ln, alias, ID, car, status,deficit }= req.body;
   const {id} = req.params;
   const query = `UPDATE taxiDrivers SET firstname = @valor1 ,secondname = @valor2,lastname = @valor3,alias = @valor4, 
-  ID = @valor5, car = @valor6, _status= @valor8 WHERE ID = @valor7`;
+  ID = @valor5, car = @valor6, _status= @valor8, deficit= @valor9 WHERE ID = @valor7`;
   pool
     .connect()
     .then(() => {
@@ -78,6 +78,7 @@ export const updateDriver = (req, res) => {
         .input("valor6", sql.VarChar, car)
         .input("valor7",sql.Int,id)
         .input("valor8",sql.Bit, status)
+        .input("valor9",sql.Money, deficit)
         .query(query);
     })
     .then((result) => {

@@ -23,13 +23,13 @@ export const getCarFees = (req, res) => {
     pool
       .connect()
       .then(() => {
-        return pool.request().query("SELECT * FROM taxiDriver");
+        return pool.request().query("SELECT * FROM car_fee");
       })
       .then((result) => {
         return res.status(200).json(result.recordset);
       })
       .catch((err) => {
-        return res.status(404).json(err);
+        return res.status(404).json({message:"Error obteniendo los datos"});
       });
   }
 };
@@ -50,17 +50,17 @@ export const registerCarFee = (req, res) => {
         .query(query);
     })
     .then((result) => {
-      return res.status(200).json({ message: "Carro registrado" });
+      return res.status(200).json({ message: "Registrado" });
     })
     .catch((err) => {
-      return res.status(404).json(err);
+      return res.status(404).json({message:"Error Registrando"});
     });
 };
 
 export const updateCarFee = (req, res) => {
-  const { gain,maintenance, car }= req.body;
+  const { gain,maintenance, car, residuo }= req.body;
   const {id} = req.params;
-  const query = `UPDATE car_fee SET  gain= @valor1 ,maintenance = @valor2,car = @valor3, carFee_date = SYSDATETIMEOFFSET()
+  const query = `UPDATE car_fee SET  gain= @valor1 ,maintenance = @valor2,car = @valor3, carFee_date = SYSDATETIMEOFFSET(),residuo = @valor5
    WHERE car= @valor4`;
   pool
     .connect()
@@ -71,13 +71,14 @@ export const updateCarFee = (req, res) => {
         .input("valor2", sql.Money, maintenance)
         .input("valor3", sql.VarChar, car)
         .input("valor4", sql.VarChar, id)
+        .input("valor5", sql.Money, residuo)
         .query(query);
     })
     .then((result) => {
-      return res.status(200).json({ message: "Carro actualizado" });
+      return res.status(200).json({ message: "Actualizado" });
     })
     .catch((err) => {
-      return res.status(404).json(err);
+      return res.status(404).json({message:"Error Actualizando"});
     });
 };
 export const deleteCarFee = (req, res) => {
@@ -92,6 +93,6 @@ export const deleteCarFee = (req, res) => {
       return res.status(200).json({ message: "Informacion del carro eliminado" });
     })
     .catch((err) => {
-      return res.status(404).json(err);
+      return res.status(404).json({message:"Error Eliminando"});
     });
 };

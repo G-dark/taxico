@@ -33,10 +33,10 @@ export const getFees = (req, res) => {
 };
 
 export const registerFee = (req, res) => {
-  const { taxidriver, amount, user, car, date } = req.body;
+  const { taxidriver, amount, user, car, date,rest } = req.body;
 
-  const query = `INSERT INTO fee(delivered_by,amount,delivery_date,fee_date,received_by,car) VALUES(@valor1,@valor2, SYSDATETIMEOFFSET(),
-              convert(DATETIME,@valor5),@valor3, @valor4);`;
+  const query = `INSERT INTO fee(delivered_by,amount,delivery_date,fee_date,received_by,car,rest) VALUES(@valor1,@valor2, SYSDATETIMEOFFSET(),
+              convert(DATETIME,@valor5),@valor3, @valor4,@valor6);`;
   pool
     .connect()
     .then(() => {
@@ -47,6 +47,7 @@ export const registerFee = (req, res) => {
         .input("valor3", sql.VarChar, user)
         .input("valor4", sql.VarChar, car)
         .input("valor5", sql.VarChar, date)
+        .input("valor6", sql.Bit, rest)
         .query(query);
     })
     .then((result) => {
@@ -58,10 +59,10 @@ export const registerFee = (req, res) => {
 };
 
 export const updateFee = (req, res) => {
-  const { taxidriver, amount, user, car,date } = req.body;
+  const { taxidriver, amount, user, car,date,rest } = req.body;
   const {id} = req.params;
   const query = `UPDATE fee SET delivered_by = @valor1, amount = @valor2, car = @valor4, fee_date = convert(DATETIME,@valor6),
-   updated_at = SYSDATETIMEOFFSET(), updated_by = @valor3 WHERE ID = @valor5`;
+   updated_at = SYSDATETIMEOFFSET(), updated_by = @valor3, rest=@valor7 WHERE ID = @valor5`;
   pool
     .connect()
     .then(() => {
@@ -73,6 +74,7 @@ export const updateFee = (req, res) => {
         .input("valor4", sql.VarChar, car)
         .input("valor5", sql.Int, id)
         .input("valor6", sql.VarChar, date)
+        .input("valor7", sql.Bit, rest)
         .query(query);
     })
     .then((result) => {
