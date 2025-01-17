@@ -24,9 +24,9 @@ jobs:
       - name: npm install, build
         run: |
           npm install
-          npm install bcrypt@5.1.1 cookie-parser@1.4.7 cors@2.8.5, 
-          npm install dotenv@16.4.7 express@4.21.2 jsonwebtoken@9.0.2, 
-          npm install moment@2.30.1 mssql@11.0.1 node@23.5.0,
+          npm install bcrypt@5.1.1 cookie-parser@1.4.7 cors@2.8.5 
+          npm install dotenv@16.4.7 express@4.21.2 jsonwebtoken@9.0.2
+          npm install moment@2.30.1 mssql@11.0.1 node@23.5.0
           npm install node-cron@3.0.3 node-fetch@3.3.2
           npm run build --if-present
           
