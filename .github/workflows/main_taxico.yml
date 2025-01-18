@@ -33,7 +33,7 @@ jobs:
       - name: delete node_modules and reinstall
         run: |
           dir 
-          rmdir  D:\a\taxico\taxico\node_modules
+          rd node_modules /s
           npm install
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
