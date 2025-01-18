@@ -33,7 +33,7 @@ jobs:
       - name: delete node_modules and reinstall
         run: |
           dir 
-          rd node_modules /s
+          rd node_modules
           npm install
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
