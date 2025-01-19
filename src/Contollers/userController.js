@@ -1,5 +1,5 @@
 import sql from "mssql";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { Validation } from "../Utils/validation.js";
 import { config2, SALT_OR_ROUNDS, SECRET_KEY } from "../App/config.js";
 import jwt from "jsonwebtoken";

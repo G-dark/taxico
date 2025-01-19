@@ -9,6 +9,6 @@ export class Validation{
     static validatePassword(pw){
         if(!pw) throw new Error("password mustn't be undefined")
         if (typeof pw != 'string') throw new Error("password must be a string")
-        if(pw.length < 8 || pw.length > 8) throw new Error("username must be eight characters long")
+        if(pw.length < 8 || pw.length > 8) throw new Error("password must be eight characters long")
     }
 }
