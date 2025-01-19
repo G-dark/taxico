@@ -1,0 +1,54 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - taxico-app
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://mcr.microsoft.com/
+        username: ${{ secrets.AzureAppService_ContainerUsername_be61ead3ac334b9d93586f8fd156fe21 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_9cdd7d8f9db24eec8ebb9b19ce86fc9e }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_be61ead3ac334b9d93586f8fd156fe21 }}/appsvc/staticsite:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: 'write' #This is required for requesting the JWT
+
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'taxico-app'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_18b30ebbcfe3420b9480b6f5a637dca3 }}
+        images: 'mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_be61ead3ac334b9d93586f8fd156fe21 }}/appsvc/staticsite:${{ github.sha }}'
