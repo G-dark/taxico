@@ -63,7 +63,7 @@ export const logUser = async (req, res) => {
           .cookie("access_token", token, {
             httpOnly: true,
             secure: process.env.ENV === "production",
-            sameSite: "strict",
+            sameSite: "None",
             maxAge: 1000 * 60 * 60,
           })
           .send(log);
@@ -101,9 +101,9 @@ export const refreshToken = async (req, res) => {
         return res
           .status(200)
           .cookie("access_token", token, {
-            httpOnly: false,
+            httpOnly: true,
             secure: process.env.ENV === "production",
-            sameSite: "strict",
+            sameSite: "None",
             maxAge: 1000 * 60 * 60,
           })
           .send(log);
