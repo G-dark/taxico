@@ -16,9 +16,11 @@ import moment from "moment"
 const app = express();
 
 app.use(express.json());
-app.use(cors({ credentials: true, origin: FE }));
+app.use(cors({ credentials: true, origin: FE,
+              methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE', 'OPTIONS'] }));
 app.use(cookieParser());
 app.use(login);
+app.options('*', cors());
 app.use((req, res, next) => {
   const token = req.cookies.access_token;
   req.session = { user: null };
