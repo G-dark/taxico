@@ -227,10 +227,7 @@ app.use(repair);
 app.use(taxiDriver);
 app.use(car);
 app.use(carFee);
-fetch('https://ifconfig.me')
-  .then(response => response.text())
-  .then(ip => console.log(`La IP pública de salida es: ${ip}`))
-  .catch(err => console.error('Error al obtener la IP:', err));
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`escuchando en el puerto, ${PORT}`);
 });
