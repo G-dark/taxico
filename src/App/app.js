@@ -226,6 +226,7 @@ app.use(taxiDriver);
 app.use(car);
 app.use(carFee);
 
+console.log("Iniciando aplicación Express...");
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`escuchando en el puerto, ${PORT}`);
 });
