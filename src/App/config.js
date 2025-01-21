@@ -40,7 +40,6 @@ export const config2 = {
   password: PASSWORD,
   server: HOST,
   database: DATABASE, // Nombre de la base de datos
-  port: DB_PORT,
   options: {
     encrypt: true, // Para Azure, en servidores locales puede ser false
     trustServerCertificate: true, // Para servidores locales en desarrollo
