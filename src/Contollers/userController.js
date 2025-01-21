@@ -69,7 +69,7 @@ export const logUser = async (req, res) => {
           .send(log);
       })
       .catch((err) => {
-        return res.status(404).json({message:"Error en el inicio de sesion"});
+        return res.status(404).json({message:err});
       });
   } catch (error) {
     return res.status(401).json({ message: error.message });
