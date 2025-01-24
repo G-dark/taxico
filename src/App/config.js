@@ -11,6 +11,7 @@ export let SALT_OR_ROUNDS;
 export let SECRET_KEY;
 export let ENDPOINT;
 export let FE;
+export let FE2;
 if (process.env.ENV == "development") {
   PORT = process.env.PORT;
   HOST = process.env.HOST;
@@ -34,6 +35,7 @@ if (process.env.ENV == "production") {
   ENDPOINT = process.env.ENDPOINT;
   FE = process.env.ENDPOINT_FE;
   SECRET_KEY = process.env.SECRET_KEY;
+  FE2 = process.env.ENDPOINT_FE2;
 }
 export const config2 = {
   user: USER,
