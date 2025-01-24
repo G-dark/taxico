@@ -3,7 +3,7 @@ import cors from "cors";
 import fee from "../Routes/fee.routes.js";
 import repair from "../Routes/repair.routes.js";
 import taxiDriver from "../Routes/taxiDriver.routes.js";
-import { PORT, SECRET_KEY, ENDPOINT, FE } from "./config.js";
+import { PORT, SECRET_KEY, ENDPOINT, FE, FE2 } from "./config.js";
 import car from "../Routes/car.routes.js";
 import carFee from "../Routes/carFee.routes.js";
 import login from "../Routes/login.routes.js";
@@ -17,7 +17,7 @@ const app = express();
 app.use(cookieParser());
 
 app.use(express.json());
-app.use(cors({ credentials: true, origin: FE,
+app.use(cors({ credentials: true, origin: [FE,FE2],
               methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE', 'OPTIONS'] }));
 
 app.use(login);
